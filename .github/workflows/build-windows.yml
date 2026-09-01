@@ -1,1 +1,29 @@
+name: Build Windows Game
 
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.5.1
+          use-dotnet: false
+
+      - name: Build Windows
+        run: |
+          mkdir build
+          godot --headless --path . --export-release "Windows Desktop" "build/DoubleOrNothing.exe"
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: DoubleOrNothing-Windows
+          path: build/
